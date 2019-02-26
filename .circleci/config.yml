@@ -12,9 +12,9 @@ jobs:
           command: |
             VERSION="${CIRCLE_BUILD_NUM}"
             bin/build-jar.sh ${VERSION}
-            JAR_NAME=pilger-suite-${VERSION}.jar
+            JAR_NAME="pilger-suite-${VERSION}.jar"
             mkdir artifact
-            cp target/${JAR_NAME} artifact/
+            cp "target/${JAR_NAME}" artifact/
       - store_artifacts:
           path: artifact/pilger-suite-${VERSION}.jar
           destination: target
