@@ -11,10 +11,7 @@ jobs:
           name: Maven Build
           command: |
             VERSION="${CIRCLE_BUILD_NUM}"
-            bin/build-jar.sh ${VERSION}
-            JAR_NAME="pilger-suite-${VERSION}.jar"
-            mkdir artifact
-            cp "target/${JAR_NAME}" artifact/
+            bin/pipeline-build-jar.sh ${VERSION}
       - store_artifacts:
-          path: artifact/pilger-suite-${VERSION}.jar
+          path: artifact
           destination: target
