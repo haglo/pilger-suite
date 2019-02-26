@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pilger</groupId>
 	<artifactId>pilger-suite</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${version}</version>
 	<name>pilger-suite</name>
 	<description>Demo project for Spring Boot</description>
 
