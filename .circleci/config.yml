@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: maven:3.5.4
+        environment:
+          FLASK_CONFIG: testing
+    steps:
+      - checkout
+      - run:
+          name: Maven Build
+          command: |
+            VERSION="${CIRCLE_BUILD_NUM}"
+            MAVEN_PARAMS="-Dbuild.number=${VERSION}"
+            mvn ${MAVEN_PARAMS} -B clean verify
