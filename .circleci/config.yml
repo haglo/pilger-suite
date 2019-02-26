@@ -8,14 +8,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build Docker
+          name: Build Jar
           command: |
             VERSION="${CIRCLE_BUILD_NUM}"
             bin/pipeline-build-jar.sh ${VERSION}
-      - setup_remote_docker
-      - run:
-          name: Build Docker Image
-          command:  bin/pipeline-build-docker.sh ${VERSION}
+#      - setup_remote_docker
+#      - run:
+#          name: Build Docker Image
+#          command:  bin/pipeline-build-docker.sh ${VERSION}
       - store_artifacts:
           path: artifact
           destination: target

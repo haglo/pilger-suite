@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jdk-alpine
 
 ARG USER=pilger-suite
 ARG GROUP=pilger-suite
