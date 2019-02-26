@@ -3,8 +3,8 @@ jobs:
   build_jar:
     docker:
       - image: maven:3.5.4-jdk-11
-        environment:
-          FLASK_CONFIG: testing
+#        environment:
+#          FLASK_CONFIG: testing
     steps:
       - checkout
       - run:
@@ -28,12 +28,13 @@ jobs:
             bin/pipeline-build-docker.sh ${VERSION}
 workflows:
   version: 2
-  jobs:
-    - build_jar:
+  build_jar_in_docker:
+    jobs:
+     - build_jar:
        filters:
          branches:
           only: pipeline
-    - build_docker:
+     - build_docker:
        requires:
            - build_jar
        filters:
