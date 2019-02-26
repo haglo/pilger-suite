@@ -31,12 +31,4 @@ workflows:
   build_jar_in_docker:
     jobs:
       - build_jar:
-        filters:
-          branches:
-            only: pipeline
       - build_docker:
-        requires:
-          - build_jar
-        filters:
-          branches:
-            only: pipeline
