@@ -36,7 +36,7 @@ workflows:
             only: pipeline
       - build_docker:
           requires:
-            - build
+            - build_jar
           filters:
             branches:
               only: pipeline
