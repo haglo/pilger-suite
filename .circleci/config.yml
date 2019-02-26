@@ -12,3 +12,5 @@ jobs:
           command: |
             VERSION="${CIRCLE_BUILD_NUM}"
             bin/build-jar.sh ${VERSION}
+      - store_artifacts:
+          path: target/pilger-suite-${VERSION}.jar
