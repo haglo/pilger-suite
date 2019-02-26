@@ -7,6 +7,7 @@ jobs:
     #          FLASK_CONFIG: testing
     steps:
       - checkout
+      - run: VERSION="${CIRCLE_BUILD_NUM}"
       - restore_cache:
           keys:
             - maven-dependencies-{{ checksum "pom.xml" }}
@@ -17,7 +18,6 @@ jobs:
           paths:
             - ~/.m2
           key: maven-dependencies-{{ checksum "pom.xml" }}
-      - run: VERSION="${CIRCLE_BUILD_NUM}"
       - run: bin/pipeline-build-jar.sh ${VERSION}
       - store_artifacts:
           path: artifact
