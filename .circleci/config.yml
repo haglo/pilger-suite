@@ -13,12 +13,18 @@ jobs:
             - maven-dependencies-{{ checksum "pom.xml" }}
             # fallback to using the latest cache if no exact match is found
             - maven-dependencies-
-      - run: mvn "-Dversion=${VERSION}" dependency:resolve
+      - run:
+          command: |
+            VERSION="${CIRCLE_BUILD_NUM}"
+            mvn "-Dversion=${VERSION}" dependency:resolve
       - save_cache:
           paths:
             - ~/.m2
           key: maven-dependencies-{{ checksum "pom.xml" }}
-      - run: bin/pipeline-build-jar.sh ${VERSION}
+      - run:
+          command: |
+            VERSION="${CIRCLE_BUILD_NUM}"
+            bin/pipeline-build-jar.sh ${VERSION}
       - store_artifacts:
           path: artifact
           destination: target
