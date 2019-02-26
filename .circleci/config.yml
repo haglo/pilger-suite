@@ -1,22 +1,27 @@
 version: 2
 jobs:
-  build:
+  assemble:
     docker:
       - image: circleci/openjdk:11-jdk
     #        environment:
     #          FLASK_CONFIG: testing
     steps:
       - checkout
-      - run:
-          name: Build Jar
-          command: |
-            VERSION="${CIRCLE_BUILD_NUM}"
-            bin/pipeline-build-jar.sh ${VERSION}
-#      - setup_remote_docker
-#      - run:
-#          name: Build Docker Image
-#          command:  bin/pipeline-build-docker.sh ${VERSION}
+      - restore_cache:
+          keys:
+            - maven-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - maven-dependencies-
+      - run: mvn dependency:resolve
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: maven-dependencies-{{ checksum "pom.xml" }}
+      - run: VERSION="${CIRCLE_BUILD_NUM}"
+      - run: bin/pipeline-build-jar.sh ${VERSION}
       - store_artifacts:
           path: artifact
           destination: target
+
+
 
