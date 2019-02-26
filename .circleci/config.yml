@@ -28,7 +28,9 @@ jobs:
             bin/pipeline-build-docker.sh ${VERSION}
 workflows:
   version: 2
-  build_jar_in_docker:
+  build-test-and-deploy:
     jobs:
       - build_jar
-      - build_docker
+      - build_docker:
+          requires:
+            - build_jar
