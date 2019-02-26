@@ -11,4 +11,4 @@ jobs:
           name: Maven Build
           command: |
             VERSION="${CIRCLE_BUILD_NUM}"
-            bin/build-jar.sh
+            bin/build-jar.sh ${VERSION}
