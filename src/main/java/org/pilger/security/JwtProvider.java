@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.pilger.model.entity.Role;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
  *
  * Created by Mary Ellen Bowman
  */
-@Component
+
 public class JwtProvider{
 
     private final String ROLES_KEY = "roles";
@@ -31,28 +30,7 @@ public class JwtProvider{
         this.validityInMilliseconds = validityInMilliseconds;
     }
 
-    /**
-     * Create JWT string given username and roles.
-     *
-     * @param username
-     * @param roles
-     * @return jwt string
-     */
-    public String createToken(String username, List<Role> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLES_KEY, roles.stream().map(role ->new SimpleGrantedAuthority(role.getRolename()))
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList()));
-        Date now = new Date();
-        Date expiresAt = new Date(now.getTime() + validityInMilliseconds);
-        String jwtToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiresAt)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
-        return jwtToken;
-    }
+
 
     /**
      * Validate the JWT String

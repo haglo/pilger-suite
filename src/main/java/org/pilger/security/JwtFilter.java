@@ -1,9 +1,10 @@
 package org.pilger.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.intercept.RunAsUserToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -19,16 +20,14 @@ import java.util.Optional;
  *
  * Created by Mary Ellen Bowman
  */
+@Slf4j
 public class JwtFilter extends GenericFilterBean {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
 	private static final String BEARER = "Bearer";
 	private static final String HEADER_STRING="Authorization";
 	private Integer ctr = 0;
 
-	private AuthenticatedUserDetailService authenticatedUserDetailService;
+	public JwtFilter() {
 
-	public JwtFilter(AuthenticatedUserDetailService userDetailService) {
-		this.authenticatedUserDetailService = userDetailService;
 	}
 
 	/**
@@ -45,21 +44,27 @@ public class JwtFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
-		LOGGER.info("Check - JSON Web Token " + ctr);
+		log.info("Check - JSON Web Token " + ctr);
 		// Read http-Request
 		String jwtToken = ((HttpServletRequest) request).getHeader(HEADER_STRING);
 		getBearerToken(jwtToken).ifPresent(token -> {
-			LOGGER.info("Find -  JSON Web Token " + ctr);
-			authenticatedUserDetailService.loadUserByJwtToken(token).ifPresent(userDetails -> {
-				SecurityContextHolder.getContext().setAuthentication(
-						new PreAuthenticatedAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
-			});
+			log.info("Find -  JSON Web Token " + ctr);
+			log.info("Token contains {}",token);
+			String username = readUsernameFromToken(token);
+			RunAsUserToken asUserToken = new RunAsUserToken(username, username, null, null, null);
+			asUserToken.setAuthenticated(true);
+			SecurityContextHolder.getContext().setAuthentication(asUserToken);
 		});
 
 		ctr++;
 		// move on to the next filter in the chains
 		filterChain.doFilter(request, response);
 
+	}
+
+
+	private String readUsernameFromToken(String token){
+		return "NO_USER";
 	}
 
 	/**
