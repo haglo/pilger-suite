@@ -36,8 +36,8 @@ public class JwtFilter extends GenericFilterBean {
 	 * valid then set the current context With the Authentication(user and roles)
 	 * found in the token
 	 *
-	 * @param req         Servlet Request
-	 * @param res         Servlet Response
+	 * @param request         Servlet Request
+	 * @param response         Servlet Response
 	 * @param filterChain Filter Chain
 	 * @throws IOException
 	 * @throws ServletException
@@ -60,20 +60,12 @@ public class JwtFilter extends GenericFilterBean {
 		// move on to the next filter in the chains
 		filterChain.doFilter(request, response);
 
-		System.out.println("IN FILTER");
-		String header = ((HttpServletRequest) request).getHeader("Authorization");
-
-		if (header == null || !header.startsWith("Bearer")) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-
 	}
 
 	/**
 	 * if present, extract the jwt token from the "Bearer <jwt>" header value.
 	 *
-	 * @param headerVal
+	 * @param token
 	 * @return jwt if present, empty otherwise
 	 */
 	private Optional<String> getBearerToken(String token) {

@@ -8,22 +8,24 @@ import org.pilger.model.entity.*;
 import org.pilger.model.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static org.springframework.security.core.userdetails.User.withUsername;
 
 @Component
 public class AuthenticatedUserDetailService implements UserDetailsService {
 
 	@Autowired
-	CurrentUserRepository repository;
+	private CurrentUserRepository repository;
 
 	@Autowired
-	JwtProvider jwtProvider;
+	private JwtProvider jwtProvider;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		CurrentUser elytronUser = repository.findByUsername(username);
+		CurrentUser currentUser = repository.findByUsername(username);
 
-		return withUsername(elytronUser.getUsername()).password("").authorities(elytronUser.getRoles()).accountExpired(false)
+		return withUsername(currentUser.getUsername()).password("").authorities(currentUser.getRoles().stream().map(Role::getRolename).collect(Collectors.joining())).accountExpired(false)
 				.accountLocked(false).credentialsExpired(false).disabled(false).build();
 	}
 

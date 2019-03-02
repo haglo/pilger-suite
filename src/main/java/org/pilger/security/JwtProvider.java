@@ -40,7 +40,7 @@ public class JwtProvider{
      */
     public String createToken(String username, List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put(ROLES_KEY, roles.stream().map(role ->new SimpleGrantedAuthority(role.getAuthority()))
+        claims.put(ROLES_KEY, roles.stream().map(role ->new SimpleGrantedAuthority(role.getRolename()))
                                         .filter(Objects::nonNull)
                                         .collect(Collectors.toList()));
         Date now = new Date();
