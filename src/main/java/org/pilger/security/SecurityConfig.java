@@ -60,6 +60,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);
 		http.addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class);
+		
+		
+		
 		http.sessionManagement().sessionAuthenticationStrategy(sessionAuthenticationStrategy());
 		http.authorizeRequests().antMatchers("/VAADIN/**", "/favicon.ico", "/robots.txt").permitAll()
 				.antMatchers("/manifest.webmanifest", "/sw.js", "/offline-page.html").permitAll()
@@ -118,5 +121,14 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 				.getRequest();
 		return ((KeycloakPrincipal) request.getUserPrincipal()).getKeycloakSecurityContext().getToken();
 	}
+	
+	
+	public boolean makeMeSystemUser() {
+        if (SecurityUtils.getCurrentUserLogin() != null) return false; //Not allowed in request-scope!
+        RunAsUserToken asUserToken = new RunAsUserToken(Constants.SYSTEM_ACCOUNT, Constants.SYSTEM_ACCOUNT, null, null, null);
+        asUserToken.setAuthenticated(true);
+        SecurityContextHolder.getContext().setAuthentication(asUserToken);
+        return true;
+    }
 
 }
